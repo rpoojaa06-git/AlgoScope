@@ -146,6 +146,16 @@ function App() {
       ),
     },
     {
+      path: '/moore-voting',
+      element: (
+        <Suspense fallback={<PageLoader />}>
+          <AppLayout>
+            <MooreVotingVisualizerPage />
+          </AppLayout>
+        </Suspense>
+      ),
+    },
+    {
       path: '*',
       element: (
         <Suspense fallback={<PageLoader />}>
