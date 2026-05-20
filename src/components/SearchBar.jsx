@@ -144,8 +144,8 @@ const ALGORITHMS = [
   },
   // Math Theory
   {
-    id: 'mathTheory', 
-    name: 'Math Theory', 
+    id: 'mathTheory',
+    name: 'Math Theory',
     category: 'Math',
     route: '/math-theory',
   },
