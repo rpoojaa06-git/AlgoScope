@@ -149,9 +149,9 @@ export const complexityMap = {
   },
 
   prim: {
-    best: 'O((E + V) log V)',
-    average: 'O((E + V) log V)',
-    worst: 'O((E + V) log V)',
+    best: 'O((E + V) log E)',
+    average: 'O((E + V) log E)',
+    worst: 'O((E + V) log E)',
     space: 'O(V)',
   },
 
