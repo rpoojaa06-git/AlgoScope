@@ -4,6 +4,7 @@ import Footer from './Footer'
 import { motion } from 'framer-motion'
 import SeoHead from './SeoHead'
 import ScrollToTopButton from './ScrollToTopButton'
+import Breadcrumbs from './Breadcrumbs'
 
 const Background = () => (
   <div className="fixed inset-0 z-0 pointer-events-none">
@@ -29,6 +30,9 @@ export default function AppLayout({ children, showBackground = true }) {
         <div className="flex-1">
           {children}
         </div>
+        <Breadcrumbs />
+
+        <div className="flex-1">{children}</div>
 
         <Footer />
       </div>
