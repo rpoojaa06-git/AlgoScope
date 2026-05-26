@@ -348,7 +348,9 @@ const PracticePage = () => {
 
   // Profiler state
   const [profilerCode, setProfilerCode] = useState(profilerDefaultCode)
-  const [profilerInputSizes, setProfilerInputSizes] = useState('100, 500, 1000, 2500, 5000')
+  const [profilerInputSizes, setProfilerInputSizes] = useState(
+    '100, 500, 1000, 2500, 5000'
+  )
   const [profilerDatasetType, setProfilerDatasetType] = useState('random')
   const [profilerData, setProfilerData] = useState([])
   const [isProfilerRunning, setIsProfilerRunning] = useState(false)
@@ -486,13 +488,13 @@ const PracticePage = () => {
       { type: 'info', content: 'Executing user code...' },
     ])
     const result = await runCodeInWorker(userCode, undefined, activeWorkerRef)
-    
+
     if (!isMountedRef.current) return
-    
+
     if (result.status === 'cancelled') {
       return
     }
-    
+
     setLogs((prev) => [...prev, ...result.logs])
     if (result.status === 'error') {
       setLogs((prev) => [
@@ -515,13 +517,13 @@ const PracticePage = () => {
     ])
     const inputVal = parseSharedInput()
     const result = await runCodeInWorker(userCode, inputVal, activeWorkerRefA)
-    
+
     if (!isMountedRef.current) return
-    
+
     if (result.status === 'cancelled') {
       return
     }
-    
+
     setLogsA((prev) => [...prev, ...result.logs])
     if (result.status === 'error') {
       setLogsA((prev) => [
@@ -543,13 +545,13 @@ const PracticePage = () => {
     ])
     const inputVal = parseSharedInput()
     const result = await runCodeInWorker(userCode, inputVal, activeWorkerRefB)
-    
+
     if (!isMountedRef.current) return
-    
+
     if (result.status === 'cancelled') {
       return
     }
-    
+
     setLogsB((prev) => [...prev, ...result.logs])
     if (result.status === 'error') {
       setLogsB((prev) => [
@@ -617,95 +619,140 @@ const PracticePage = () => {
     setIsComparing(false)
   }
 
-  const handleRunProfiler = useCallback(async (userCode) => {
-    if (isExecuting || isExecutingA || isExecutingB || isComparing || isProfilerRunning) {
-      return
-    }
+  const handleRunProfiler = useCallback(
+    async (userCode) => {
+      if (
+        isExecuting ||
+        isExecutingA ||
+        isExecutingB ||
+        isComparing ||
+        isProfilerRunning
+      ) {
+        return
+      }
 
-    // Parse input sizes
-    const sizes = profilerInputSizes
-      .split(',')
-      .map((s) => parseInt(s.trim(), 10))
-      .filter((n) => !isNaN(n) && n > 0)
-      .sort((a, b) => a - b)
+      // Parse input sizes
+      const sizes = profilerInputSizes
+        .split(',')
+        .map((s) => parseInt(s.trim(), 10))
+        .filter((n) => !isNaN(n) && n > 0)
+        .sort((a, b) => a - b)
 
-    if (sizes.length === 0) {
-      setProfilerLogs((prev) => [
-        ...prev,
-        { type: 'error', content: 'No valid input sizes configured. Use comma-separated positive integers.' },
+      if (sizes.length === 0) {
+        setProfilerLogs((prev) => [
+          ...prev,
+          {
+            type: 'error',
+            content:
+              'No valid input sizes configured. Use comma-separated positive integers.',
+          },
+        ])
+        return
+      }
+
+      setIsProfilerRunning(true)
+      profilerCancelledRef.current = false
+      setProfilerData([])
+      setProfilerLogs([
+        {
+          type: 'info',
+          content: `Starting profiler: ${sizes.length} input sizes [${sizes.join(', ')}]`,
+        },
       ])
-      return
-    }
+      setProfilerProgress(`0 / ${sizes.length}`)
 
-    setIsProfilerRunning(true)
-    profilerCancelledRef.current = false
-    setProfilerData([])
-    setProfilerLogs([{ type: 'info', content: `Starting profiler: ${sizes.length} input sizes [${sizes.join(', ')}]` }])
-    setProfilerProgress(`0 / ${sizes.length}`)
+      const generator =
+        datasetGenerators[profilerDatasetType] || datasetGenerators.random
+      const collectedData = []
 
-    const generator = datasetGenerators[profilerDatasetType] || datasetGenerators.random
-    const collectedData = []
+      // Sequential execution — one size at a time for benchmark fairness
+      for (let i = 0; i < sizes.length; i++) {
+        if (profilerCancelledRef.current || !isMountedRef.current) {
+          setProfilerLogs((prev) => [
+            ...prev,
+            { type: 'error', content: 'Profiler run cancelled.' },
+          ])
+          break
+        }
 
-    // Sequential execution — one size at a time for benchmark fairness
-    for (let i = 0; i < sizes.length; i++) {
-      if (profilerCancelledRef.current || !isMountedRef.current) {
+        const size = sizes[i]
+        setProfilerProgress(`${i + 1} / ${sizes.length} (N=${size})`)
         setProfilerLogs((prev) => [
           ...prev,
-          { type: 'error', content: 'Profiler run cancelled.' },
+          { type: 'info', content: `Benchmarking N=${size}...` },
         ])
-        break
+
+        const inputData = generator(size)
+        const result = await runCodeInWorker(
+          userCode,
+          inputData,
+          activeProfilerWorkerRef
+        )
+
+        if (!isMountedRef.current || profilerCancelledRef.current) break
+        if (result.status === 'cancelled') break
+
+        if (result.status === 'success') {
+          const dataPoint = { size, duration: result.duration }
+          collectedData.push(dataPoint)
+          setProfilerData([...collectedData])
+          setProfilerLogs((prev) => [
+            ...prev,
+            {
+              type: 'info',
+              content: `  N=${size}: ${result.duration.toFixed(3)} ms`,
+            },
+          ])
+        } else if (result.status === 'timeout') {
+          setProfilerLogs((prev) => [
+            ...prev,
+            {
+              type: 'error',
+              content: `  N=${size}: Timeout (3s) — skipping larger sizes.`,
+            },
+          ])
+          // Stop profiling — larger sizes will also timeout
+          break
+        } else {
+          setProfilerLogs((prev) => [
+            ...prev,
+            { type: 'error', content: `  N=${size}: Error — ${result.error}` },
+          ])
+          break
+        }
       }
 
-      const size = sizes[i]
-      setProfilerProgress(`${i + 1} / ${sizes.length} (N=${size})`)
-      setProfilerLogs((prev) => [
-        ...prev,
-        { type: 'info', content: `Benchmarking N=${size}...` },
-      ])
-
-      const inputData = generator(size)
-      const result = await runCodeInWorker(userCode, inputData, activeProfilerWorkerRef)
-
-      if (!isMountedRef.current || profilerCancelledRef.current) break
-      if (result.status === 'cancelled') break
-
-      if (result.status === 'success') {
-        const dataPoint = { size, duration: result.duration }
-        collectedData.push(dataPoint)
-        setProfilerData([...collectedData])
-        setProfilerLogs((prev) => [
-          ...prev,
-          { type: 'info', content: `  N=${size}: ${result.duration.toFixed(3)} ms` },
-        ])
-      } else if (result.status === 'timeout') {
-        setProfilerLogs((prev) => [
-          ...prev,
-          { type: 'error', content: `  N=${size}: Timeout (3s) — skipping larger sizes.` },
-        ])
-        // Stop profiling — larger sizes will also timeout
-        break
-      } else {
-        setProfilerLogs((prev) => [
-          ...prev,
-          { type: 'error', content: `  N=${size}: Error — ${result.error}` },
-        ])
-        break
+      if (isMountedRef.current) {
+        setIsProfilerRunning(false)
+        setProfilerProgress('')
+        if (collectedData.length > 0) {
+          setProfilerLogs((prev) => [
+            ...prev,
+            {
+              type: 'info',
+              content: `Profiling complete. ${collectedData.length} data points collected.`,
+            },
+          ])
+        }
       }
-    }
+    },
+    [
+      profilerInputSizes,
+      profilerDatasetType,
+      isExecuting,
+      isExecutingA,
+      isExecutingB,
+      isComparing,
+      isProfilerRunning,
+    ]
+  )
 
-    if (isMountedRef.current) {
-      setIsProfilerRunning(false)
-      setProfilerProgress('')
-      if (collectedData.length > 0) {
-        setProfilerLogs((prev) => [
-          ...prev,
-          { type: 'info', content: `Profiling complete. ${collectedData.length} data points collected.` },
-        ])
-      }
-    }
-  }, [profilerInputSizes, profilerDatasetType, isExecuting, isExecutingA, isExecutingB, isComparing, isProfilerRunning])
-
-  const isAnyExecuting = isExecuting || isExecutingA || isExecutingB || isComparing || isProfilerRunning
+  const isAnyExecuting =
+    isExecuting ||
+    isExecutingA ||
+    isExecutingB ||
+    isComparing ||
+    isProfilerRunning
 
   return (
     <motion.div
@@ -870,9 +917,19 @@ const PracticePage = () => {
 
                 <button
                   onClick={handleCompareBenchmark}
-                  disabled={isComparing || isExecuting || isExecutingA || isExecutingB || language !== 'javascript'}
+                  disabled={
+                    isComparing ||
+                    isExecuting ||
+                    isExecutingA ||
+                    isExecutingB ||
+                    language !== 'javascript'
+                  }
                   className={`w-full py-3.5 px-4 text-xs font-bold text-white rounded-xl active:scale-[0.98] transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer ${
-                    language === 'javascript' && !isExecuting && !isExecutingA && !isExecutingB && !isComparing
+                    language === 'javascript' &&
+                    !isExecuting &&
+                    !isExecutingA &&
+                    !isExecutingB &&
+                    !isComparing
                       ? 'bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 hover:shadow-[0_0_20px_rgba(6,182,212,0.4)]'
                       : 'bg-slate-800 text-slate-500 cursor-not-allowed opacity-50 hover:transform-none hover:shadow-none'
                   }`}
@@ -1002,19 +1059,23 @@ const PracticePage = () => {
                     <li className="flex gap-3">
                       <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0 shadow-[0_0_8px_rgba(16,185,129,0.6)]"></div>
                       <span>
-                        Write an algorithm that processes the <code>input</code> array.
+                        Write an algorithm that processes the <code>input</code>{' '}
+                        array.
                       </span>
                     </li>
                     <li className="flex gap-3">
                       <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0 shadow-[0_0_8px_rgba(16,185,129,0.6)]"></div>
                       <span>
-                        Configure input sizes and dataset type in the panel above.
+                        Configure input sizes and dataset type in the panel
+                        above.
                       </span>
                     </li>
                     <li className="flex gap-3">
                       <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0 shadow-[0_0_8px_rgba(16,185,129,0.6)]"></div>
                       <span>
-                        Click &quot;Run Code&quot; to benchmark across all sizes and see the runtime graph with O(N), O(N log N), and O(N²) overlays.
+                        Click &quot;Run Code&quot; to benchmark across all sizes
+                        and see the runtime graph with O(N), O(N log N), and
+                        O(N²) overlays.
                       </span>
                     </li>
                   </>
@@ -1073,7 +1134,7 @@ const PracticePage = () => {
             </div>
           </div>
 
-           {/* Editor Panel */}
+          {/* Editor Panel */}
           <div className="w-full min-w-0">
             {isProfilerMode ? (
               <div className="flex flex-col gap-8">

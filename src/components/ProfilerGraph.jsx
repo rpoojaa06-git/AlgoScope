@@ -30,7 +30,7 @@ const buildTheoreticalCurves = (empiricalData) => {
   // Raw theoretical values at maxSize (used as normalization anchors)
   const anchors = {
     'O(N)': maxSize,
-    'O(N log N)': maxSize * Math.log2(maxSize),
+    'O(N log N)': maxSize > 1 ? maxSize * Math.log2(maxSize) : 0,
     'O(N²)': maxSize * maxSize,
   }
 
@@ -38,12 +38,14 @@ const buildTheoreticalCurves = (empiricalData) => {
     const n = point.size
     const entry = { size: n }
 
-    entry['O(N)'] = (n / anchors['O(N)']) * maxDuration
+    entry['O(N)'] =
+      anchors['O(N)'] > 0 ? (n / anchors['O(N)']) * maxDuration : 0
     entry['O(N log N)'] =
-      n > 0
+      n > 0 && anchors['O(N log N)'] > 0
         ? ((n * Math.log2(n)) / anchors['O(N log N)']) * maxDuration
         : 0
-    entry['O(N²)'] = ((n * n) / anchors['O(N²)']) * maxDuration
+    entry['O(N²)'] =
+      anchors['O(N²)'] > 0 ? ((n * n) / anchors['O(N²)']) * maxDuration : 0
 
     return entry
   })
@@ -69,7 +71,11 @@ const CustomTooltip = ({ active, payload, label }) => {
           className="text-xs font-mono"
           style={{ color: entry.color }}
         >
-          {entry.name}: {typeof entry.value === 'number' ? entry.value.toFixed(3) : entry.value} ms
+          {entry.name}:{' '}
+          {typeof entry.value === 'number'
+            ? entry.value.toFixed(3)
+            : entry.value}{' '}
+          ms
         </p>
       ))}
     </div>
