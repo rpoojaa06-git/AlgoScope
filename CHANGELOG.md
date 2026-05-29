@@ -5,6 +5,249 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - 2026-05-29
+
+### Added
+
+- implement native Floyd-Warshall for solo grid visualizer
+- integrate guess the algorithm challenge page into navigation, search, footer, and SEO
+- add MCQ quiz game
+- add empirical Big-O runtime benchmarking system (#386)
+- add responsive scroll-to-top button
+- refine grid comparison visualization and scoring
+- add grid comparison mode for shortest path algorithms
+- add custom array input for search visualizer (linear & binary)
+
+### Fixed
+
+- lint
+- restore string algorithms route and improve complexity layout
+- correct browser title on valid sub-routes
+- overlap between close button and sort dropdown
+- resolve formatting and division by zero when maxSize is 1
+- address remaining visualization nitpicks
+- address comparison mode review feedback
+- resolve footer link JSX syntax issue
+- make maintainer link styles consistent
+
+### Changed
+
+- standardize semantic theme variable syntax
+- replace hardcoded colors with semantic theme variables
+
+### 📂 Changed Files
+
+```
+- 📁 **.github/**
+  - 📁 **ISSUE_TEMPLATE/**
+    - ✏️ feature_request.yml
+- 📁 **src/**
+  - 📁 **algorithms/**
+    - 📁 **dp/**
+      - ➕ dpStepGenerators.js
+    - 📁 **sorting/**
+      - ✏️ mergeSortSteps.js
+  - 📁 **components/**
+    - 📁 **arraySearch/**
+      - ✏️ Visualizer.jsx
+    - 📁 **backtrackingAlgo/**
+      - ✏️ VisualizerPage.jsx
+    - 📁 **challenge/**
+      - ➕ ChallengePage.jsx
+      - ➕ ChallengeVisualizer.jsx
+    - 📁 **dataStructures/**
+      - ✏️ stackIV.jsx
+    - 📁 **dynamicProgramming/**
+      - ➕ DPVisualizer.jsx
+    - 📁 **MathTheory/**
+      - ✏️ MathSoloVisualizer.jsx
+    - 📁 **shortestPathAlgo/**
+      - ➕ GridComparisonMode.jsx
+      - ✏️ GridVisualizer.jsx
+      - ✏️ ShortestPathPage.jsx
+    - 📁 **sortingAlgo/**
+      - ➕ RecursiveTree.jsx
+      - ✏️ Visualizer.jsx
+    - 📁 **stringAlgo/**
+      - ✏️ VisualizerPage.jsx
+    - 📁 **visualizer/**
+      - ✏️ CodePanel.jsx
+    - ✏️ AppLayout.jsx
+    - ✏️ CodeEditor.jsx
+    - ✏️ ComplexityCard.jsx
+    - ✏️ Footer.jsx
+    - ✏️ Home.jsx
+    - ✏️ Navbar.jsx
+    - ✏️ PracticePage.jsx
+    - ➕ ProfilerGraph.jsx
+    - ➕ ScrollToTopButton.jsx
+    - ✏️ SearchBar.jsx
+    - ✏️ SeoHead.jsx
+  - ✏️ App.jsx
+  - ✏️ input.css
+- ✏️ CHANGELOG.md
+- ✏️ package-lock.json
+- ✏️ README.md
+```
+
+## [1.8.0] - 2026-05-26
+
+### Added
+
+- add keyboard shortcuts for visualization controls
+- add Auto/Step mode toggle for manual step control
+- add Practice Sandbox to Explore dropdown
+- implemented scroll to top button
+- add dynamic breadcrumb navigation for visualizer pages
+- add string algo to search bar and explore bar
+- redesign 404 page with glitch effect and terminal animation
+- add interactive graph canvas builder for BFS, DFS, and shortest-path visualizers
+- add Fibonacci Visualizer with Golden Spiral and Recursion Tree modes
+- add test case manager with IndexedDB persistence and search
+- add test case manager
+- add custom array input and validation
+- add Sieve of Eratosthenes visualizer and fix math code line highlighting
+- add weighted node traversal and interactive cost visualization
+
+### Fixed
+
+- resolve linting and formatting issues
+- format & lint
+- avoid blocking Space key on focused buttons and links
+- format
+- format
+- harden Worker runtime against benchmark message spoofing (#310)
+- add scroll-to-top button
+- add scroll-to-top button
+- resolve algorithm cards becoming hidden after page refresh
+- improve breadcrumb accessibility and route labels
+- scale canvas by device pixel ratio for Retina displays
+- enhance input validation and bounds safety in generateRandomArray and calculateStepDelay
+- add canvas resize handler and go back fallback
+- show graph builder toolbar reliably on canvas
+- resolve production server startup issue
+- clear stale sorting visualization state after interrupted execution (#323)
+- lint
+- lint
+- address PR review for builder edits and stale traversals
+- improve Clerk dark mode profile UI visibility
+- allow duplicate values in BST and fix negative input bug on Enter
+- resolve react-hooks violations in graph builder components
+- resolve text overlap in complexity sidebar
+- wrap treeState in useMemo, remove unused isLeaf variable
+- lint
+- added light mode visibility practice button and visible text
+- sync live code block with custom array input in Kadane's and Moore's Algo
+- format
+- format
+- format
+- preserve weighted node styling during traversal
+- step insights now visible by dafault
+
+### Changed
+
+- simplify breadcrumb pathname parsing
+- optimize breadcrumb pathname processing
+- optimize Google Font loading in index.html
+- address CodeRabbit review feedback
+
+### 📂 Changed Files
+
+```
+- 📁 **.antigravitycli/**
+  - ➕ dca056bd-be77-484a-96bd-dc78d615732b.json
+- 📁 **.github/**
+  - 📁 **workflows/**
+    - ✏️ pipelines.yml
+- 📁 **src/**
+  - 📁 **algorithms/**
+    - 📁 **backtracking/**
+      - ✏️ backtrackingSources.js
+    - 📁 **mathTheory/**
+      - ✏️ mathTheorySources.jsx
+      - ✏️ mathTheorySteps.jsx
+    - 📁 **searching/**
+      - ✏️ shortestPathSources.js
+    - 📁 **sorting/**
+      - ✏️ bubbleSortSteps.js
+    - 📁 **stringAlgo/**
+      - ➕ stringSources.js
+  - 📁 **components/**
+    - 📁 **arraySearch/**
+      - ✏️ Visualizer.jsx
+    - 📁 **backtrackingAlgo/**
+      - ➕ CanvasTowerOfHanoi.jsx
+      - ✏️ MenuSetAlgoBacktracking.jsx
+      - ✏️ VisualizerPage.jsx
+    - 📁 **dataStructures/**
+      - ✏️ treeIV.jsx
+    - 📁 **hero/**
+      - ➕ Hero.jsx
+      - ➕ HeroProductPreview.jsx
+    - 📁 **kadaneAlgo/**
+      - ✏️ VisualizerPage.jsx
+    - 📁 **MathTheory/**
+      - ➕ CanvasFibonacci.jsx
+      - ➕ CanvasSieve.jsx
+      - ✏️ MathSoloVisualizer.jsx
+    - 📁 **mooreVotingAlgo/**
+      - ✏️ VisualizerPage.jsx
+    - 📁 **searchAlgo/**
+      - ✏️ CanvasSearching.jsx
+      - ✏️ MenuSelectNodeSearch.jsx
+      - ✏️ VisualizerPage.jsx
+    - 📁 **shared/**
+      - ➕ GraphBuilderToolbar.jsx
+    - 📁 **shortestPathAlgo/**
+      - ✏️ CanvasShortestPath.jsx
+      - ✏️ GridVisualizer.jsx
+      - ✏️ MenuSelectNodesShortestPath.jsx
+      - ✏️ MenuSetAlgoShortestPath.jsx
+      - ✏️ ShortestPathPage.jsx
+    - 📁 **sortingAlgo/**
+      - ✏️ ComparisonMode.jsx
+      - ✏️ Visualizer.jsx
+    - 📁 **stringAlgo/**
+      - ➕ CanvasKMP.jsx
+      - ➕ CanvasRabinKarp.jsx
+      - ➕ CanvasZAlgorithm.jsx
+      - ➕ CompareMode.jsx
+      - ➕ MenuSetStringAlgo.jsx
+      - ➕ VisualizerPage.jsx
+    - 📁 **testCaseManager/**
+      - ➕ TestCaseManager.jsx
+    - 📁 **visualizer/**
+      - ➕ useKeyboardShortcuts.js
+    - ✏️ AlgoCard.jsx
+    - ✏️ AppLayout.jsx
+    - ➕ Breadcrumbs.jsx
+    - ✏️ ComplexityCard.jsx
+    - ✏️ Footer.jsx
+    - ✏️ Home.jsx
+    - ✏️ Navbar.jsx
+    - ✏️ PageNotFound.jsx
+    - ✏️ PracticePage.jsx
+    - ✏️ SearchBar.jsx
+    - ✏️ SeoHead.jsx
+  - 📁 **data/**
+    - ✏️ complexityMap.js
+  - 📁 **lib/**
+    - ➕ scheduleNetworkReady.js
+    - ➕ testCaseStore.js
+    - ✏️ utils.js
+    - ➕ utils.test.js
+  - ✏️ App.jsx
+  - ✏️ input.css
+  - ✏️ main.jsx
+- ➕ .env.example
+- ✏️ CHANGELOG.md
+- ✏️ index.html
+- ✏️ package-lock.json
+- ✏️ package.json
+- ✏️ README.md
+- ➕ vitest.config.js
+```
+
 ## [1.7.0] - 2026-05-22
 
 ### Added
@@ -655,3 +898,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ➕ vite.config.js
 - ➕ yarn.lock
 ```
+

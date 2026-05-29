@@ -1,14 +1,6 @@
 import React from 'react'
 import AlgoCard from './AlgoCard'
 import { Hero } from './hero/Hero'
-import SortingImg from '../assets/new-home-images/array.png'
-import SearchingImg from '../assets/new-home-images/traversal.png'
-import LinearSearchImg from '../assets/new-home-images/search.png'
-import GraphAlgoImg from '../assets/new-home-images/shortestPath.png'
-import KadaneImg from '../assets/new-home-images/KadaneImg.png'
-import MooreVotingImg from '../assets/new-home-images/MooreVoting.png'
-import BacktrackingImg from '../assets/new-home-images/KadaneImg.png'
-import adt from '../assets/new-home-images/adt.png'
 import { motion } from 'framer-motion'
 
 const containerVariants = {
@@ -28,32 +20,24 @@ const ALGORITHMS = [
     description: 'Visualizing Bubble, Merge, Quick, Heap, and Shell Sort.',
     color: 'theme-card border-blue-500/30 hover:border-blue-400',
     link: '/sort',
-    image: SortingImg,
-    imageAlt: 'Array elements being rearranged for sorting algorithms',
   },
   {
     title: 'Searching',
     description: 'Explore BFS, DFS, and other traversal methods.',
     color: 'theme-card border-cyan-500/30 hover:border-cyan-400',
     link: '/search',
-    image: SearchingImg,
-    imageAlt: 'Graph traversal nodes and paths for searching algorithms',
   },
   {
     title: 'Graph Algorithms',
     description: 'Dijkstra, Floyd-Warshall, and Topological Sort.',
     color: 'theme-card border-purple-500/30 hover:border-purple-400',
     link: '/spath',
-    image: GraphAlgoImg,
-    imageAlt: 'Weighted graph path visualization for shortest path algorithms',
   },
   {
     title: 'Array Search',
     description: 'Linear and Binary search visualization.',
     color: 'theme-card border-orange-500/30 hover:border-orange-400',
     link: '/ldssearch',
-    image: LinearSearchImg,
-    imageAlt: 'Array search visualization highlighting a target value',
   },
   {
     title: 'Abstract Data Types',
@@ -61,17 +45,12 @@ const ALGORITHMS = [
       'Stacks, Queues, Binary Trees, Binary Heaps, and Priority Queues.',
     color: 'theme-card border-emerald-500/30 hover:border-emerald-400',
     link: '/adt',
-    image: adt,
-    imageAlt:
-      'Stacks, Queues, Binary Trees, Binary Heaps, and Priority Queues data structures',
   },
   {
     title: 'Kadane Algorithm',
     description: 'Visualize Maximum Subarray Sum using Kadane’s Algorithm.',
     color: 'theme-card border-pink-500/30 hover:border-pink-400',
     link: '/kadane',
-    image: KadaneImg,
-    imageAlt: 'Kadane algorithm visualization for maximum subarray sum',
   },
   {
     title: "Moore's Voting Algorithm",
@@ -79,9 +58,6 @@ const ALGORITHMS = [
       "Visualize the Moore's Voting Algorithm for finding the majority element.",
     color: 'theme-card border-green-500/30 hover:border-green-400',
     link: '/moore-voting',
-    image: MooreVotingImg,
-    imageAlt:
-      "Moore's Voting algorithm visualization for finding the majority element",
   },
   {
     title: 'Math Theory',
@@ -89,34 +65,44 @@ const ALGORITHMS = [
       'Visualize GCD, Fast Exponentiation, and Bit Manipulation step-by-step.',
     color: 'theme-card border-indigo-500/30 hover:border-indigo-400',
     link: '/math-theory',
-    image: KadaneImg,
-    imageAlt: 'Mathematical algorithms visualization',
+  },
+  {
+    title: 'String Algorithms',
+    description:
+      'Visualize KMP, Rabin-Karp, Z-Algorithm, and pattern matching techniques step-by-step.',
+    color: 'theme-card border-violet-500/30 hover:border-violet-400',
+    link: '/string-algorithms',
+  },
+  {
+    title: 'Dynamic Programming',
+    description:
+      'LCS, 0/1 Knapsack, Coin Change, and LIS — watch the DP table fill step by step.',
+    path: '/dynamic-programming', // or "to" depending on your card schema
+    color: 'theme-card border-rose-500/30 hover:border-rose-400',
+    link: '/dynamic-programming',
   },
   {
     title: 'Backtracking',
     description:
-      'N-Queens and Sudoku Solver — watch the algorithm place, conflict, and undo in real time.',
-    color: 'bg-slate-900/50 border-rose-500/30 hover:border-rose-400',
+      'N-Queens, Sudoku Solver, and Tower of Hanoi with step-by-step recursion.',
+    color: 'theme-card border-rose-500/30 hover:border-rose-400',
     link: '/backtracking',
-    image: BacktrackingImg,
-    imageAlt:
-      'N-Queens chessboard with queens placed and backtracking steps highlighted',
   },
 ]
 
 export const Home = () => {
   return (
-    <div className="theme-home relative min-h-screen w-full overflow-hidden selection:bg-cyan-500/30">
+    <div className="theme-home relative min-h-screen w-full overflow-x-hidden selection:bg-cyan-500/30">
       <Hero />
 
       <div className="relative z-10 px-4 pb-16">
         <div id="explore" className="mx-auto w-full max-w-7xl px-4">
           <div className="mb-12 flex items-center gap-4">
-            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-slate-700 to-transparent" />
-            <span className="font-mono text-sm uppercase tracking-[0.3em] text-neutral-400">
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-current to-transparent opacity-20 theme-text-strong" />
+            <span className="font-mono text-sm uppercase tracking-[0.3em] theme-text-subtle">
               Algorithms
             </span>
-            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-slate-700 to-transparent" />
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-current to-transparent opacity-20 theme-text-strong" />
           </div>
 
           <motion.div
@@ -124,7 +110,7 @@ export const Home = () => {
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: '-100px' }}
+            viewport={{ once: true, amount: 0.1 }}
           >
             {ALGORITHMS.map((algo, index) => (
               <AlgoCard
@@ -133,10 +119,31 @@ export const Home = () => {
                 description={algo.description}
                 color={algo.color}
                 link={algo.link}
-                image={algo.image}
-                imageAlt={algo.imageAlt}
               />
             ))}
+          </motion.div>
+
+          <div className="mt-16 mb-12 flex items-center gap-4">
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-current to-transparent opacity-20 theme-text-strong" />
+            <span className="font-mono text-sm uppercase tracking-[0.3em] theme-text-subtle">
+              Games & Challenges
+            </span>
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-current to-transparent opacity-20 theme-text-strong" />
+          </div>
+
+          <motion.div
+            className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.1 }}
+          >
+            <AlgoCard
+              title="Guess the Algorithm"
+              description="Test your algorithm recognition skills! Can you identify the sorting algorithm purely from its visual animation?"
+              color="theme-card border-yellow-500/30 hover:border-yellow-400"
+              link="/challenge"
+            />
           </motion.div>
         </div>
       </div>
