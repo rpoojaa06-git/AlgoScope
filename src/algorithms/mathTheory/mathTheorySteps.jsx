@@ -658,7 +658,7 @@ export function generateFFTSteps(inputSignal) {
   const n = inputSignal.length
 
   // Clamp / pad to nearest power of 2 between 4 and 16
-  const validN = [4, 8, 16].find((p) => p >= n) ?? 8
+  const validN = [4, 8, 16].find((p) => p >= n) ?? 16
   const signal = [...inputSignal]
   while (signal.length < validN) signal.push(0)
   const finalSignal = signal.slice(0, validN)
