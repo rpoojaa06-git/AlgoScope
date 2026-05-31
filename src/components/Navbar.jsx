@@ -300,7 +300,11 @@ export const Navbar = () => {
               >
                 <Link
                   to="/practice"
-                  className="relative text-sm font-medium text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 px-4 py-1.5 rounded-lg transition-all duration-300 z-10"
+                  className={`relative text-sm font-medium px-4 py-1.5 rounded-lg transition-all duration-300 z-10 ${
+                    pathname === '/practice'
+                      ? 'text-indigo-600 dark:text-indigo-300 font-semibold'
+                      : 'text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
+                  }`}
                 >
                   Practice
                 </Link>
@@ -323,7 +327,11 @@ export const Navbar = () => {
               >
                 <Link
                   to="/challenge"
-                  className="relative text-sm font-medium text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 px-4 py-1.5 rounded-lg transition-all duration-300 z-10"
+                  className={`relative text-sm font-medium px-4 py-1.5 rounded-lg transition-all duration-300 z-10 ${
+                    pathname === '/challenge'
+                      ? 'text-indigo-600 dark:text-indigo-300 font-semibold'
+                      : 'text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
+                  }`}
                 >
                   Challenge
                 </Link>
