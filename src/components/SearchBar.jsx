@@ -222,6 +222,7 @@ const ALGORITHMS = [
     name: 'Disjoint Set Union',
     category: 'Data Structures',
     route: '/adt?type=dsu',
+    keywords: ['dsu', 'disjoint set', 'union find'],
   },
   {
     id: 'bheap',
