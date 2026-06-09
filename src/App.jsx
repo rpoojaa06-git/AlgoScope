@@ -69,6 +69,12 @@ const OperatingSystemsPage = lazy(
 const CPUSchedulingPage = lazy(
   () => import('./components/operatingSystems/CPUSchedulingPage')
 )
+const PageReplacementPage = lazy(
+  () => import('./components/operatingSystems/PageReplacementPage')
+)
+const DiskSchedulingPage = lazy(
+  () => import('./components/operatingSystems/DiskSchedulingPage')
+)
 
 // Simple fallback for Suspense
 const PageLoader = () => (
@@ -270,6 +276,26 @@ const router = createBrowserRouter([
       <Suspense fallback={<PageLoader />}>
         <AppLayout notesKey="algo-notes-cpu-scheduling">
           <CPUSchedulingPage />
+        </AppLayout>
+      </Suspense>
+    ),
+  },
+  {
+    path: '/operating-systems/page-replacement',
+    element: (
+      <Suspense fallback={<PageLoader />}>
+        <AppLayout notesKey="algo-notes-page-replacement">
+          <PageReplacementPage />
+        </AppLayout>
+      </Suspense>
+    ),
+  },
+  {
+    path: '/operating-systems/disk-scheduling',
+    element: (
+      <Suspense fallback={<PageLoader />}>
+        <AppLayout notesKey="algo-notes-disk-scheduling">
+          <DiskSchedulingPage />
         </AppLayout>
       </Suspense>
     ),
