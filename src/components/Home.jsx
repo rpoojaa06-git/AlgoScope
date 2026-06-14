@@ -126,7 +126,7 @@ const ALGORITHMS = [
       'Visualize the sliding window algorithm use to optimally solve problems on substrings and subarrays.',
     color: 'theme-card border-rose-500/30 hover:border-rose-400',
     link: '/sliding-window',
-    difficulty: 'Advanced',
+    difficulty: 'Intermediate',
   },
   {
     title: 'Two Pointer Approach',
@@ -134,7 +134,7 @@ const ALGORITHMS = [
       'Place two pointers at opposite ends and converge them inward — at each step, move the pointer that can not improve the answer, eliminating half the remaining pairs in O(n) instead of checking all pairs in O(n²).',
     color: 'theme-card border-rose-500/30 hover:border-rose-400',
     link: '/two-pointer',
-    difficulty: 'Advanced',
+    difficulty: 'Intermediate',
   },
 ]
 
